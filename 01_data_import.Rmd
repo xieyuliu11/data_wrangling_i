@@ -8,6 +8,7 @@ This file is for doing data import.
 ## Import 2 CSV
 ```{r}
 library(tidyverse)
+library(readxl)
 ```
 
 Import our first dataset.
@@ -28,7 +29,7 @@ pups_df =
   read.csv(
     file = "data/FAS_pups.csv",
     skip = 3,
-    na = c("","NA",".")
+    na = c("","NA",".") # change space, NA, . into NA when importing data
     ) #skip first 3 rows
 
 pups_df = janitor::clean_names(pups_df) #a package::a function inside the package
@@ -52,5 +53,63 @@ skimming??
 
 ```{r}
 skimr::skim(pups_df) #a package::a function inside the package
+```
+
+##Oh excel ...
+
+Jenny Bryan made `readxl` to solve our problems.
+
+```{r}
+mlb_df =
+  read_excel("data/mlb11.xlsx")
+```
+
+look at the data
+
+```{r}
+mlb_df
+```
+
+load some LotR data.
+
+Import FOTR words.
+```{r}
+fotr_df = 
+  read_excel(
+    "data/LotR_Words.xlsx",
+    range = "B3:D6"
+    )
+
+fotr_df
+```
+
+What about 
+```{r}
+tt_df = 
+  read_excel(
+    "data/LotR_Words.xlsx",
+    range = "F3:H6"
+    )
+
+tt_df
+```
+
+##Import SAS
+
+Read in the PULSE dataset
+```{r}
+library(haven)
+pulse_df=
+  read_sas("data/public_pulse_data.sas7bdat")
+pulse_df = janitor::clean_names(pulse_df)
+```
+
+## What
+
+import pups with `read.csv()`
+```{r}
+pups_df_base = 
+  read.csv("data/FAS_pups.csv")
+pups_df_base
 ```
 
