@@ -9,6 +9,7 @@ This file is for doing data import.
 ```{r}
 library(tidyverse)
 library(readxl)
+library(haven)
 ```
 
 Import our first dataset.
@@ -98,7 +99,6 @@ tt_df
 
 Read in the PULSE dataset
 ```{r}
-library(haven)
 pulse_df=
   read_sas("data/public_pulse_data.sas7bdat")
 pulse_df = janitor::clean_names(pulse_df)
@@ -113,3 +113,4 @@ pups_df_base =
 pups_df_base
 ```
 
+Won't show: lazy about variable names; super slow for big dataset
