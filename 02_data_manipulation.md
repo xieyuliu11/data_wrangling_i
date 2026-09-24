@@ -2164,3 +2164,106 @@ arrange(litters_df, desc(pups_born_alive))
     ## 47               0            4
     ## 48               4            3
     ## 49               2            3
+
+## Do multiple steps …
+
+This is bad:
+
+``` r
+litters_df = read_csv("data/FAS_litters.csv", na=c("","NA","."))
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+litters_rename_df = janitor::clean_names(litters_df)
+litters_with_gd_df = select(litters_rename_df,group,starts_with("gd"))
+litters_no_na_df =drop_na(litters_with_gd_df)
+litters_wi_gain_df = mutate(litters_no_na_df,wt_gain = gd18_weight - gd0_weight)
+```
+
+This is worse:
+
+``` r
+select(
+  janitor::clean_names(
+    read_csv("data/FAS_litters.csv", na=c("","NA","."))),
+  group, starts_with("gd"))
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+    ## # A tibble: 49 × 4
+    ##    group gd0_weight gd18_weight gd_of_birth
+    ##    <chr>      <dbl>       <dbl>       <dbl>
+    ##  1 Con7        19.7        34.7          20
+    ##  2 Con7        27          42            19
+    ##  3 Con7        26          41.4          19
+    ##  4 Con7        28.5        44.1          19
+    ##  5 Con7        NA          NA            20
+    ##  6 Con7        NA          NA            20
+    ##  7 Con7        NA          NA            20
+    ##  8 Con8        NA          NA            20
+    ##  9 Con8        NA          NA            20
+    ## 10 Con8        28.5        NA            20
+    ## # ℹ 39 more rows
+
+This is good
+
+``` r
+litters_df = 
+  read_csv("data/FAS_litters.csv", na = c("","NA",".")) |>
+  janitor::clean_names() |>
+  select(group, starts_with("gd")) |>
+  drop_na() |>
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group)
+  )
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+load pups, clean names, drop missing, keep litter number and pd
+variables, add pd walk -7
+
+``` r
+pups_df = 
+  read_csv("data/FAS_pups.csv", skip = 3, na = c("","NA",".")) |>
+  janitor::clean_names() |>
+  drop_na() |>
+  select(litter_number, starts_with("pd")) |>
+  mutate(
+    pd_walk_minus_7 = pd_walk - 7
+  )
+```
+
+    ## Rows: 313 Columns: 6
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Litter Number
+    ## dbl (5): Sex, PD ears, PD eyes, PD pivot, PD walk
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
