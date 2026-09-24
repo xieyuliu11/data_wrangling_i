@@ -2267,3 +2267,66 @@ pups_df =
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+litters_df |>
+  filter(group %in% c("con7","con8")) |>
+  lm(gd18_weight ~ gd0_weight, data =_)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = gd18_weight ~ gd0_weight, data = filter(litters_df, 
+    ##     group %in% c("con7", "con8")))
+    ## 
+    ## Coefficients:
+    ## (Intercept)   gd0_weight  
+    ##      14.013        1.049
+
+select & pull
+
+``` r
+litters_df |>
+  select(group)
+```
+
+    ## # A tibble: 31 × 1
+    ##    group
+    ##    <chr>
+    ##  1 con7 
+    ##  2 con7 
+    ##  3 con7 
+    ##  4 con7 
+    ##  5 mod7 
+    ##  6 mod7 
+    ##  7 mod7 
+    ##  8 mod7 
+    ##  9 mod7 
+    ## 10 mod7 
+    ## # ℹ 21 more rows
+
+never fo `$`
+
+``` r
+litters_df$group
+```
+
+    ##  [1] "con7" "con7" "con7" "con7" "mod7" "mod7" "mod7" "mod7" "mod7" "mod7"
+    ## [11] "mod7" "low7" "low7" "low7" "low7" "low7" "low7" "low7" "low7" "mod8"
+    ## [21] "mod8" "mod8" "mod8" "mod8" "low8" "low8" "low8" "low8" "low8" "low8"
+    ## [31] "low8"
+
+pipes and viewing
+
+``` r
+litters_df |>
+  filter(group %in% c("con7","con8"))
+```
+
+    ## # A tibble: 4 × 5
+    ##   group gd0_weight gd18_weight gd_of_birth wt_gain
+    ##   <chr>      <dbl>       <dbl>       <dbl>   <dbl>
+    ## 1 con7        19.7        34.7          20    15  
+    ## 2 con7        27          42            19    15  
+    ## 3 con7        26          41.4          19    15.4
+    ## 4 con7        28.5        44.1          19    15.6
