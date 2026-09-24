@@ -155,6 +155,7 @@ pups_df =
   )
 ```
 
+sometimes the first thing isn't a dataframe
 ```{r}
 litters_df |>
   filter(group %in% c("con7","con8")) |>
